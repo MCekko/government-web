@@ -1,8 +1,4 @@
-td{
-    border: 1px solid black;
-    width: 50px;
-    height: 50px; 
-}
+
 #IMG{
     width: 50%;
     height: auto;
@@ -45,4 +41,23 @@ display: flex;
     padding-top: 50px;
 }
 
-
+#Checkbox input{
+    margin: 10px;
+    height: 15px;
+    width: 15px;
+}
+#filtreA{
+    text-decoration: none;
+    color: black;
+}
+#ButtonFiltre{
+    margin-left: 10px;
+    margin-bottom: 10px;
+    width: 50px;
+    height: 30px;
+}
+.FiltroDesplegable{
+    width: 90px;
+    height: 20px;
+    margin-left: 10px;
+}
