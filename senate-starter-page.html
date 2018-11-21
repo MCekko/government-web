@@ -57,12 +57,12 @@
                     <div id="BigFiltre" class="row">
                         <div class="col-lg-9">
                             <a id="filtreA">Filtre:</a>
-                            <input id="partido" type="checkbox" onClick="PrincipalFiltre()" name="party" value="R">R
-                            <input id="partido" type="checkbox" onClick="PrincipalFiltre()" name="party" value="D">D
-                            <input id="partido" type="checkbox" onClick="PrincipalFiltre()" name="party" value="I">I
+                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="R">R
+                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="D">D
+                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="I">I
                         </div>
                         <div class="col-lg-1">
-                            <select class="FiltroDesplegable" id="FiltreState"></select>
+                            <select class="FiltroDesplegable" id="FiltreState" onChange="ShowTableData()"></select>
                         </div>
                     </div>
                     <table id="senate-data" class="table table-stiped"></table>
