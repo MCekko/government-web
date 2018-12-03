@@ -11,6 +11,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
+    
+    <!-- production version, optimized for size and speed -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    -->
+
 </head>
 
 <body>
@@ -73,28 +81,48 @@
         </nav>
         <header>
         </header>
-        <div>
+        <div id="app">
             <div class="row">
                 <div class="col-lg-6">
-                    <h2>Senators</h2>
+                    <h2 id="Senate">Senators</h2>
                     <p>First convened in 1789, the composition and powers of the Senate are established in Article One of the U.S. Constitution. Each state is represented by two senators, regardless of population, who serve staggered six-year terms. The Senate has several exclusive powers not granted to the House, including consenting to treaties as a precondition to their ratification and consenting to or confirming appointments of Cabinet secretaries, federal judges, other federal executive officials, military officers, regulatory officials, ambassadors, and other federal uniformed officers, as well as trial of federal officials impeached by the House.</p>
                     <div id="BigFiltre" class="row">
                         <div class="col-lg-9">
                             <a id="filtreA">Filtre:</a>
-                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="R">R
-                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="D">D
-                            <input id="partido" type="checkbox" onClick="ShowTableData()" name="party" value="I">I
+                            <input type="checkbox" @click="filteredParties" name="party" value="R">R
+                            <input type="checkbox" @click="filteredParties" name="party" value="D">D
+                            <input type="checkbox" @click="filteredParties" name="party" value="I">I
                         </div>
                         <div class="col-lg-1">
-                            <select class="FiltroDesplegable" id="FiltreState" onChange="ShowTableData()"></select>
+                            <select  id="option"  class="FiltroDesplegable"  @change="filteredParties">
+                                <option :value="state" v-for="state in searchState">{{state}}</option>
+                            </select>
                         </div>
                     </div>
-                    <table id="senate-data" class="table table-stiped"></table>
+                    <table id="senate-data" class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Party</th>
+                                <th>State</th>
+                                <th>Seniority</th>
+                                <th>Percentage Of Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="memeber in members">
+                                <td><a :href="memeber.url" target=_blank>{{memeber.first_name}} {{memeber.middle_name}} {{memeber.last_name}}</a></td> 
+                                <td>{{memeber.party}}</td>
+                                <td>{{memeber.state}}</td>
+                                <td>{{memeber.seniority}}</td>
+                                <td>{{memeber.votes_with_party_pct}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
                 <div class="col-lg-6"> <img class="img-rounded" id="IMG2" src="22550505_xl.jpg" alt="Bandera USA"></div>
             </div>
         </div>
-        <script src="-congress-113-senate.js"></script>
         <script src="main.js"></script>
     </div>
     <div>

@@ -61,3 +61,10 @@ display: flex;
     height: 20px;
     margin-left: 10px;
 }
+
+#loading {
+    background: url('resources/spinner.gif') no-repeat center center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}

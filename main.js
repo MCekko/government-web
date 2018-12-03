@@ -1,117 +1,216 @@
-var member = data.results[0].members;
-var ArrayTR = ["Name", "Party", "State", "Seniority", "Percentage Of Votes"]
-var FinalArrayState = [];
+//var data;
+//var member;
+//var ArrayTR;
+//var url = ""
 
-function RepeatedState() {
-    FinalArrayState = ["all"];
-    for (var i = 0; i < member.length; i++) {
-        if (FinalArrayState.indexOf(member[i].state) === -1) {
+var app = new Vue({
+    el: '#app',
+    data: {
+        searchParty: ["R", "D", "I"],
+        searchState: ["all"],
+        members: [],
+        url: "",
+        filter: [],
+        stateValue:"",
+        membersOriginal: []
+    },
+    created: function () {
+        this.filtrarhtml()
+        this.getData()
+    },
+    computed: {
+//        filteredParties() {
+//            this.members =  this.members.filter(item => {
+//                var res = this.searchParty.indexOf(item.party);
+//                if (res > -1) {
+//                    if (this.searchState != "all") {
+//                        if (item.state != this.searchState)
+//                            return false;
+//                        else
+//                            return true;
+//                    } else
+//                        return true;
+//                }
+//                return false;
+//            });
+//        },
+    },
+    methods: {
+        filtrarhtml: function () {
+            if (document.getElementById("Senate")) {
+                this.url = "https://api.propublica.org/congress/v1/113/senate/members.json";
+            } else if (document.getElementById("House")) {
+                this.url = "https://api.propublica.org/congress/v1/113/house/members.json";
+            } else {
+                alert("No se encuentra el Id Senado o Congreso");
+            }
+        },
+        getData: function () {
+            fetch(this.url, {
+                method: "GET",
+                headers: {
+                    'X-API-Key': 'F5XJgi3RFXKFERdRG7WA1wwLfWCR9jnZnzhiZ5Ef'
+                }
+            }).then(function (response) {
+                if (response.ok) {
 
-            FinalArrayState.push(member[i].state);
-        }
-    }
+                    return response.json();
+                }
 
-}
+            }).then(function (json) {
+                console.log("this in fecth", this);
+                console.log("name of vue variable if fetch", app)
+                console.log(json);
+                data = json;
+                app.members = data.results[0].members;
+                app.membersOriginal = data.results[0].members;
+                app.RepeatedState();
+                app.PartyFilter();
+            }).catch(function (error) {
+                console.log("Request failed:" + error.message);
+            });
 
-function RellenarDesplegableStates() {
-    RepeatedState();
-    var Dropdown = document.getElementById("FiltreState");
-    for (var i = 0; i < FinalArrayState.length; i++) {
-        var PrincipalOption = document.createElement("option");
-        PrincipalOption.setAttribute("value", FinalArrayState[i]);
-        PrincipalOption.textContent = FinalArrayState[i];
-        Dropdown.appendChild(PrincipalOption);
 
-    }
-}
+        },
+        RepeatedState: function () {
+                          
 
-function PopulateTableData(rows, cols, array) {
-    function SumaName(i) {
-        var FirstName = array[i].first_name;
-        var MiddleName = array[i].middle_name;
-        var LastName = array[i].last_name;
-        if (MiddleName == null) {
-            MiddleName = " ";
-        }
-        var FinalName = FirstName + " " + MiddleName + " " + LastName;
-        return FinalName;
-    }
+            for (var i = 0; i < this.members.length; i++) {
+                if (this.searchState.indexOf(this.members[i].state) === -1) {
+
+                    this.searchState.push(this.members[i].state);
+                }
+                
+            }
+
+        },
     
-    var PrincipalTable = document.getElementById("senate-data");
-    var HeadTable = document.createElement("thead");
-    PrincipalTable.appendChild(HeadTable);
-    var TRThead = document.createElement("tr");
-    HeadTable.appendChild(TRThead);
 
-    for (var i = 0; i < cols; i++) {
-        var CreateTH1 = document.createElement("th");
-        TRThead.appendChild(CreateTH1);
-        CreateTH1.textContent = ArrayTR[i];
-
-    }
-    var BodyTable = document.createElement("tbody");
-    PrincipalTable.appendChild(BodyTable);
-
-    var sel = document.getElementById("FiltreState");   
-    var checkedBoxes = document.querySelectorAll("input[name=party]:checked");
-    
-    var PartyFilter = [];    
-    if (checkedBoxes.length > 0) {
-        for (var j=0; j<checkedBoxes.length; j++){
-            PartyFilter.push(checkedBoxes[j].value);
-        }
-    }
-    else {
-        PartyFilter = ["R","D","I"];
-    }
-    
-    
-    for (var i = 0; i < rows; i++) {
-        var insertarRegistro = true;
-
-        if (!PartyFilter.includes(array[i].party))
-            insertarRegistro = false;
-
-        if ((sel.value != "all") && (sel.value != array[i].state)) {
-            insertarRegistro = false;
-        }
+        PartyFilter: function () {
+            var checkedBoxes = document.querySelectorAll("input[name=party]:checked");
+            if (checkedBoxes.length > 0) {
+                for (var j = 0; j < checkedBoxes.length; j++) {
+                    this.filter.push(checkedBoxes[j].value);
+                }
+            } else {
+                this.filter = ["R", "D", "I"];
+            }
+            app.searchParty = this.filter;
+        },
+         filteredParties: function() {
+             this.members = this.membersOriginal;
+             this.stateValue = document.getElementById("option").value;
+  
+            this.members = this.members.filter(item => {
+                var res = this.searchParty.indexOf(item.party);
+                if (res > -1) {
+                    if (this.searchState != "all") {
+                        if (item.state != this.stateValue){
+                           return false;  
+                        }else{
+                          return true; 
+                        }
+                            
+                    } else{
+                        return true;
+                }
+                return false;
+            }});
         
-        if (insertarRegistro) {
-            var CreateTR1 = document.createElement("tr");
-            BodyTable.appendChild(CreateTR1);
-
-            var Name = document.createElement("td");
-            CreateTR1.appendChild(Name);
-            var TagA = document.createElement("a");
-            Name.appendChild(TagA);
-            TagA.textContent = SumaName(i);
-            TagA.setAttribute("href", array[i].url);
-            TagA.setAttribute("target", "_blank");
-
-            var Party = document.createElement("td");
-            CreateTR1.appendChild(Party);
-            Party.textContent = array[i].party;
-            var State = document.createElement("td");
-            CreateTR1.appendChild(State);
-            State.textContent = array[i].state;
-            var Seniority = document.createElement("td");
-            CreateTR1.appendChild(Seniority);
-            Seniority.textContent = array[i].seniority;
-            var PercentageOfVotes = document.createElement("td");
-            CreateTR1.appendChild(PercentageOfVotes);
-            PercentageOfVotes.textContent = array[i].votes_with_party_pct + " % ";
-        }
     }
-}
-
-function ShowTableData() {
-    var table = document.getElementById("senate-data");
-    while (table.rows.length > 0) {
-        table.deleteRow(0);
     }
-    PopulateTableData(member.length, ArrayTR.length, member);
-}
+});
 
-
-RellenarDesplegableStates();
-ShowTableData();
+//
+//        if (document.getElementById("Senate")) {
+//            url = "https://api.propublica.org/congress/v1/113/senate/members.json";
+//        } else if (document.getElementById("House")) {
+//            url = "https://api.propublica.org/congress/v1/113/house/members.json";
+//        } else {
+//            alert("No se encuentra el Id Senado o Congreso");
+//        }
+//
+//        fetch(url, {
+//            method: "GET",
+//            headers: {
+//                'X-API-Key': 'F5XJgi3RFXKFERdRG7WA1wwLfWCR9jnZnzhiZ5Ef'
+//            }
+//        }).then(function (response) {
+//            if (response.ok) {
+//
+//                return response.json();
+//            }
+//
+//        }).then(function (json) {
+//            console.log(json);
+//            data = json;
+//            member = data.results[0].members;
+//            ArrayTR = ["Name", "Party", "State", "Seniority", "Percentage Of Votes"]
+//            app.members = data.results[0].members;
+//            RellenarDesplegableStates();
+//            PopulateTableHeader();
+//
+//        }).catch(function (error) {
+//            console.log("Request failed:" + error.message);
+//        });
+//
+//
+//
+//
+//        function RepeatedState() {
+//            FinalArrayState = ["all"];
+//            for (var i = 0; i < member.length; i++) {
+//                if (FinalArrayState.indexOf(member[i].state) === -1) {
+//
+//                    FinalArrayState.push(member[i].state);
+//                }
+//            }
+//
+//        }
+//
+//        function RellenarDesplegableStates() {
+//            RepeatedState();
+//            var Dropdown = document.getElementById("FiltreState");
+//            for (var i = 0; i < FinalArrayState.length; i++) {
+//                var PrincipalOption = document.createElement("option");
+//                PrincipalOption.setAttribute("value", FinalArrayState[i]);
+//                PrincipalOption.textContent = FinalArrayState[i];
+//                Dropdown.appendChild(PrincipalOption);
+//
+//            }
+//        }
+//
+//
+//        function StateFilter() {
+//            var sel = document.getElementById("FiltreState");
+//            app.searchState = sel.value;
+//        }
+//
+//
+//        function PartyFilter() {
+//            var filter = [];
+//            var checkedBoxes = document.querySelectorAll("input[name=party]:checked");
+//            if (checkedBoxes.length > 0) {
+//                for (var j = 0; j < checkedBoxes.length; j++) {
+//                    filter.push(checkedBoxes[j].value);
+//                }
+//            } else {
+//                filter = ["R", "D", "I"];
+//            }
+//            app.searchParty = filter;
+//        }
+//
+//        function PopulateTableHeader() {
+//            var PrincipalTable = document.getElementById("senate-data");
+//            var HeadTable = document.createElement("thead");
+//            PrincipalTable.appendChild(HeadTable);
+//            var TRThead = document.createElement("tr");
+//            HeadTable.appendChild(TRThead);
+//
+//            for (var i = 0; i < ArrayTR.length; i++) {
+//                var CreateTH1 = document.createElement("th");
+//                TRThead.appendChild(CreateTH1);
+//                CreateTH1.textContent = ArrayTR[i];
+//
+//            }
+//        }

@@ -1,20 +1,71 @@
-var statistics = {
+var data;
+var url = ""
+/*
+var app = new Vue({  
+    el: '#app',  
+    data: {    
+        members: [],  
+        leastEngaged: [],
+        mostEngaged: [],
+    },
+    computed: {
+    }
+}); 
+*/
 
-    "NUMR": 0,
-    "NUMD": 0,
-    "NUMI": 0,
-    "votes_party_R_pct": 0,
-    "votes_party_D_pct": 0,
-    "votes_party_I_pct": 0,
-    "member_m_Loyal_top_votes": [],
-    "member_l_Loyal_bottom_votes": [],
-    "member_m_engaged_attendace": [],
-    "member_l_engaged_attendace": [],
+if (document.getElementById("Senate")) {
+    url = "https://api.propublica.org/congress/v1/113/senate/members.json";
+}
+else if (document.getElementById("House")) {
+    url = "https://api.propublica.org/congress/v1/113/house/members.json";
+}
+else {
+    alert("No se encuentra el Id Senado o Congreso");
 }
 
-var member = data.results[0].members;
+    fetch(url,{
+            method:"GET",
+            headers: {
+                'X-API-Key': 'F5XJgi3RFXKFERdRG7WA1wwLfWCR9jnZnzhiZ5Ef'
+            }	
+    }).then(function(response){
+            if (response.ok){
 
-function NumeroRepresentantesParty() {
+        return response.json();
+    }
+
+    }).then(function(json){
+        data = json;
+        var statistics = {
+
+        "NUMR": 0,
+        "NUMD": 0,
+        "NUMI": 0,
+        "votes_party_R_pct": 0,
+        "votes_party_D_pct": 0,
+        "votes_party_I_pct": 0,
+        "member_m_Loyal_top_votes": [],
+        "member_l_Loyal_bottom_votes": [],
+        "member_m_engaged_attendace": [],
+        "member_l_engaged_attendace": [],
+    }
+        
+    var member = data.results[0].members;
+      NumeroRepresentantesParty(member, statistics);
+      ArrayMembersMissedVotes(member, statistics);
+      ArrayMembersLoyalsVotes(member, statistics);
+      FirtsTable(member, statistics);
+      ReadID(member, statistics);
+
+
+    }).catch(function (error){
+         console.log("Request failed:" + error.message);
+    });
+
+
+
+
+function NumeroRepresentantesParty(member, statistics) {
 
     var NumeroDeVotosR = member[0].total_votes;
     var NumeroDeVotosD = member[0].total_votes;
@@ -64,9 +115,9 @@ function NumeroRepresentantesParty() {
     statistics.votes_party_I_pct = FinalPercentI;
 
 }
-NumeroRepresentantesParty();
 
-function ArrayMembersMissedVotes() {
+
+function ArrayMembersMissedVotes(member, statistics) {
     var FinalArrayMMissed = [];
     var FinalArrayLMissed = [];
     var FinalArrayMMissed10 = [];
@@ -96,9 +147,9 @@ function ArrayMembersMissedVotes() {
     statistics.member_m_engaged_attendace = FinalArrayMMissed10;
     statistics.member_l_engaged_attendace = FinalArrayLMissed10;
 }
-ArrayMembersMissedVotes();
 
-function ArrayMembersLoyalsVotes() {
+
+function ArrayMembersLoyalsVotes(member, statistics) {
 
     var FinalArrayTLoyals = [];
     var FinalArrayBLoyals = [];
@@ -130,11 +181,11 @@ function ArrayMembersLoyalsVotes() {
     statistics.member_l_Loyal_bottom_votes = FinalArrayBLoyals10;
 }
 
-ArrayMembersLoyalsVotes()
 
 
 
-function FirtsTable() {
+
+function FirtsTable(member, statistics) {
 
     var TD1 = document.createElement("td");
     document.getElementById("TR1").appendChild(TD1);
@@ -160,30 +211,27 @@ function FirtsTable() {
 
 }
 
-FirtsTable();
 
-function ReadID() {
 
-    var insertar = true;
+function ReadID(member, statistics) {
 
     if (document.getElementById("Engange")) {
 
-        insertar = LEngangedVotes(statistics.member_l_engaged_attendace.length, 3);
+        LEngangedVotes(statistics.member_l_engaged_attendace.length, 3, statistics, member);
     }
     if (document.getElementById("Engange2")) {
-        insertar = MEngangedVotes(statistics.member_m_engaged_attendace.length, 3);
+        MEngangedVotes(statistics.member_m_engaged_attendace.length, 3, statistics, member);
 
     }
     if (document.getElementById("Loyals")) {
-        insertar = LLoyalsVotes(statistics.member_l_Loyal_bottom_votes.length, 3);
+        LLoyalsVotes(statistics.member_l_Loyal_bottom_votes.length, 3, statistics, member);
     }
     if (document.getElementById("Loyals2")) {
-        insertar = MLoyalsVotes(statistics.member_m_Loyal_top_votes.length, 3);
+        MLoyalsVotes(statistics.member_m_Loyal_top_votes.length, 3, statistics, member);
     }
 }
-ReadID();
-console.log(statistics.member_m_Loyal_top_votes);
-function LEngangedVotes(rows, cols) {
+
+function LEngangedVotes(rows, cols, statistics, member) {
 
     function SumaName(i) {
         var FirstName = statistics.member_l_engaged_attendace[i].first_name;
@@ -220,7 +268,7 @@ function LEngangedVotes(rows, cols) {
     }
 }
 
-function MEngangedVotes(rows, cols) {
+function MEngangedVotes(rows, cols, statistics, member) {
 
     function SumaName(i) {
         var FirstName = statistics.member_m_engaged_attendace[i].first_name;
@@ -257,7 +305,7 @@ function MEngangedVotes(rows, cols) {
     }
 }
 
-function LLoyalsVotes(rows, cols) {
+function LLoyalsVotes(rows, cols, statistics, member) {
 
     function SumaName(i) {
         var FirstName = statistics.member_l_Loyal_bottom_votes[i].first_name;
@@ -295,7 +343,7 @@ function LLoyalsVotes(rows, cols) {
     }
 }
 
-function MLoyalsVotes(rows, cols) {
+function MLoyalsVotes(rows, cols, statistics, member) {
 
     function SumaName(i) {
         var FirstName = statistics.member_m_Loyal_top_votes[i].first_name;
