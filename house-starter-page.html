@@ -11,16 +11,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
+
     <!-- development version, includes helpful console warnings -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
-    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
     <!-- production version, optimized for size and speed -->
     <!--
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     -->
-    
-    
+
+
 </head>
 
 <body>
@@ -65,7 +65,7 @@
                             </div>
                         </ul>
                     </div>
-                       <div class="col-lg-2">
+                    <div class="col-lg-2">
                         <ul>
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Party Loyalty
@@ -90,25 +90,47 @@
                     <div id="BigFiltre" class="row">
                         <div class="col-lg-9">
                             <a id="filtreA">Filtre:</a>
-                            <input id="partido" type="checkbox" onClick="PartyFilter()" name="party" value="R">R
-                            <input id="partido" type="checkbox" onClick="PartyFilter()" name="party" value="D">D
-                            <input id="partido" type="checkbox" onClick="PartyFilter()" name="party" value="I">I
+                            <input type="checkbox" @click="filteredParties" name="party" value="R">R
+                            <input type="checkbox" @click="filteredParties" name="party" value="D">D
+                            <input type="checkbox" @click="filteredParties" name="party" value="I">I
                         </div>
                         <div class="col-lg-1">
-                            <select class="FiltroDesplegable" id="FiltreState" onChange="StateFilter()"></select>
+                            <select id="option" class="FiltroDesplegable" @change="filteredParties">
+                                <option :value="state" v-for="state in searchState">{{state}}</option>
+                            </select>
                         </div>
                     </div>
-                    <table id="senate-data" class="table table-striped">
+                    <table id="senate-data" class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Party</th>
+                                <th>State</th>
+                                <th>Seniority</th>
+                                <th>Percentage Of Votes</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            <tr v-for="(value, key) in filteredParties">
-                                <td><a :href="value.url" target=_blank>{{value.first_name}} {{value.middle_name}} {{value.last_name}}</a></td> 
-                                <td>{{value.party}}</td>
-                                <td>{{value.state}}</td>
-                                <td>{{value.seniority}}</td>
-                                <td>{{value.votes_with_party_pct}}</td>
+                            <tr v-for="memeber in members">
+                                <td><a :href="memeber.url" target=_blank>{{memeber.first_name}} {{memeber.middle_name}} {{memeber.last_name}}</a></td>
+                                <td>{{memeber.party}}</td>
+                                <td>{{memeber.state}}</td>
+                                <td>{{memeber.seniority}}</td>
+                                <td>{{memeber.votes_with_party_pct}}</td>
                             </tr>
                         </tbody>
                     </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6"> <img class="img-rounded" id="IMG2" src="22550505_xl.jpg" alt="Bandera USA"></div>
             </div>

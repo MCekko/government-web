@@ -11,12 +11,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
     <link rel="stylesheet" href="style.css">
     <div class="container">
-    <nav class="container-fluid">
+        <nav class="container-fluid">
             <div>
                 <div class="row">
                     <div class="col-lg-4"><a><img class="img-circle" id="IMG" src="bandera-estados-unidos.jpg" alt="Bandera USA"></a></div>
@@ -54,7 +56,7 @@
                             </div>
                         </ul>
                     </div>
-                       <div class="col-lg-2">
+                    <div class="col-lg-2">
                         <ul>
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Party Loyalty
@@ -72,70 +74,127 @@
         </nav>
 
 
-    <header>
-        <div>
+        <header>
+            <div>
+            </div>
+        </header>
+        <!--Table container-->
+        <div id="app2">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 id="House">Party Loyalty</h2>
+                    <p>Those who consider themselves to be strong partisans, strong Democrats and strong Republicans respectively, tend to be the most faithful in voting for their party's nominee for office and legislation that backs their party's agenda. </p>
+                </div>
+                <div id="Table" class="col-lg-12">
+                    <h2 id="House">House at a glance</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Party</th>
+                                <th>Number of Reps</th>
+                                <th>% Voted with Prty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Republican</td>
+                                <td>{{statistics.NUMR}}</td>
+                                <td>{{statistics.votes_party_R_pct}}</td>
+                            </tr>
+                            <tr>
+                                <td>Democrat</td>
+                                <td>{{statistics.NUMD}}</td>
+                                <td>{{statistics.votes_party_D_pct}}</td>
+
+                            </tr>
+                            <tr>
+                                <td>Independent</td>
+                                <td>{{statistics.NUMI}}</td>
+                                <td>{{statistics.votes_party_I_pct}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <div class="col-lg-12">
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Least Loyal (Bottom 10% of Party)</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Number Party Votes</th>
+                                <th>% Party Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Loyals">
+                            <tr v-for="member in statistics.member_l_Loyal_bottom_votes">
+                                <td><a :href="member.url" target=_blank>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</a></td>
+                                <td>{{member.total_votes}}</td>
+                                <td>{{member.votes_with_party_pct}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2>Most Loyal (Top 10% of Party)</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Number Party Votes</th>
+                                <th>% Party Votes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Loyals2">
+                            <tr v-for="member in statistics.member_m_Loyal_top_votes">
+                                <td><a :href="member.url" target=_blank>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</a></td>
+                                <td>{{member.total_votes}}</td>
+                                <td>{{member.votes_with_party_pct}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
-    <!--Table container-->
-    <div>
-        <h2>Party Loyalty</h2>
-        <p>Those who consider themselves to be strong partisans, strong Democrats and strong Republicans respectively, tend to be the most faithful in voting for their party's nominee for office and legislation that backs their party's agenda. </p>
-
-        <h2 id="House">House at a glance</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Party</th>
-                    <th>Number of Reps</th>
-                    <th>% Voted with Prty</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr id = "TR1">
-                    <td>Republican</td>
-                    
-                </tr>
-                <tr id = "TR2">
-                    <td>Democrat</td>
-                    
-                </tr>
-                <tr id = "TR3">
-                    <td>Independent</td>
-                    
-                </tr>
-            </tbody>
-        </table>
-
-        <h2>Least Loyal (Bottom 10% of Party)</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Number Party Votes</th>
-                    <th>% Party Votes</th>
-                </tr>
-            </thead>
-            <tbody id = "Loyals">
-            </tbody>
-        </table>
-
-        <h2>Most Loyal (Top 10% of Party)</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Number Party Votes</th>
-                    <th>% Party Votes</th>
-                </tr>
-            </thead>
-            <tbody id = "Loyals2">
-            </tbody>
-        </table>
-
-    </div>
     </div>
     <script src="statistics.js"></script>
-     <div>
+    <div>
         <footer>
             <div id="copyright">&copy; 2018 - TGIF - All Rights Reserved</div>
         </footer>

@@ -11,12 +11,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
     <link rel="stylesheet" href="style.css">
     <div class="container">
-    <nav class="container-fluid">
+        <nav class="container-fluid">
             <div>
                 <div class="row">
                     <div class="col-lg-4"><a><img class="img-circle" id="IMG" src="bandera-estados-unidos.jpg" alt="Bandera USA"></a></div>
@@ -54,7 +56,7 @@
                             </div>
                         </ul>
                     </div>
-                       <div class="col-lg-2">
+                    <div class="col-lg-2">
                         <ul>
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Party Loyalty
@@ -71,69 +73,124 @@
             </div>
         </nav>
 
-    <header>
-        <div>
+        <header>
+            <div>
+            </div>
+        </header>
+        <!--Table container-->
+        <div id="app2">
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2 id="Senate">Attendance</h2>
+                    <p>The Constitution specifies that a majority of members constitutes a quorum to do business in each house. Representatives and senators rarely force the presence of a quorum by demanding quorum calls; thus, in most cases, debates continue even if a majority is not present.</p>
+
+                    <p>The Senate uses roll-call votes; a clerk calls out the names of all the senators, each senator stating "aye" or "no" when his or her name is announced. The House reserves roll-call votes for the most formal matters, as a roll-call of all 435 representatives takes quite some time; normally, members vote by electronic device. In the case of a tie, the motion in question fails. In the Senate, the Vice President may (if present) cast the tiebreaking vote.</p>
+                </div>
+                <div id="Table" class="col-lg-12">
+                    <h2 id="Senate">Senate at a glance</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Party</th>
+                                <th>Number of Reps</th>
+                                <th>% Voted with Prty</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Republican</td>
+                                <td>{{statistics.NUMR}}</td>
+                                <td>{{statistics.votes_party_R_pct}}</td>
+                            </tr>
+                            <tr>
+                                <td>Democrat</td>
+                                <td>{{statistics.NUMD}}</td>
+                                <td>{{statistics.votes_party_D_pct}}</td>
+
+                            </tr>
+                            <tr>
+                                <td>Independent</td>
+                                <td>{{statistics.NUMI}}</td>
+                                <td>{{statistics.votes_party_I_pct}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h2>Least Engaged (Bottom 10% Attendance)</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Number of Missed Votes</th>
+                                <th>% Missed</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Engange">
+                            <tr v-for="member in statistics.member_m_engaged_attendace">
+                                <td><a :href="member.url" target=_blank>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</a></td>
+                                <td>{{member.missed_votes}}</td>
+                                <td>{{member.missed_votes_pct}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <h2>Most Engaged (Top 10% Attendance)</h2>
+                    <table class="table table-stiped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Number of Missed Votes</th>
+                                <th>% Missed</th>
+                            </tr>
+                        </thead>
+                        <tbody id="Engange2">
+                            <tr v-for="member in statistics.member_l_engaged_attendace">
+                                <td><a :href="member.url" target=_blank>{{member.first_name}} {{member.middle_name}} {{member.last_name}}</a></td>
+                                <td>{{member.missed_votes}}</td>
+                                <td>{{member.missed_votes_pct}} %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="atom-spinner" v-if="members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </header>
-    <!--Table container-->
-    <div>
-        <h2>Attendance</h2>
-        <p>The Constitution specifies that a majority of members constitutes a quorum to do business in each house. Representatives and senators rarely force the presence of a quorum by demanding quorum calls; thus, in most cases, debates continue even if a majority is not present.</p>
-
-        <p>The Senate uses roll-call votes; a clerk calls out the names of all the senators, each senator stating "aye" or "no" when his or her name is announced. The House reserves roll-call votes for the most formal matters, as a roll-call of all 435 representatives takes quite some time; normally, members vote by electronic device. In the case of a tie, the motion in question fails. In the Senate, the Vice President may (if present) cast the tiebreaking vote.</p>
-
-        <h2 id="Senate">Senate at a glance</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Party</th>
-                    <th>Number of Reps</th>
-                    <th>% Voted with Prty</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr id = "TR1">
-                    <td>Republican</td>
-                    
-                </tr>
-                <tr id = "TR2">
-                    <td>Democrat</td>
-                   
-                </tr>
-                <tr id = "TR3">
-                    <td>Independent</td>
-                    
-                </tr>
-            </tbody>
-        </table>
-        <h2>Least Engaged (Bottom 10% Attendance)</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Number of Missed Votes</th>
-                    <th>% Missed</th>
-                </tr>
-            </thead>
-            <tbody id = "Engange">
-            </tbody>
-        </table>
-
-        <h2>Most Engaged (Top 10% Attendance)</h2>
-        <table class="table table-stiped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Number of Missed Votes</th>
-                    <th>% Missed</th>
-                </tr>
-            </thead>
-            <tbody id = "Engange2">
-                
-            </tbody>
-        </table>
-
-    </div>
     </div>
     <script src="statistics.js"></script>
     <div>

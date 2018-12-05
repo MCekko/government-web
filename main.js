@@ -35,14 +35,11 @@ var app = new Vue({
                 }
 
             }).then(function (json) {
-                // console.log("this in fecth", this);
-                // console.log("name of vue variable if fetch", app)
-                // console.log(json);
-                data = json;
-                app.members = data.results[0].members;
-                app.membersOriginal = data.results[0].members;
+
+                app.members = json.results[0].members;
+                app.membersOriginal = json.results[0].members;
                 app.RepeatedState();
-                // app.PartyFilter();
+                
             }).catch(function (error) {
                 console.log("Request failed:" + error.message);
             });

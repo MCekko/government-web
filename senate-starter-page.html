@@ -12,8 +12,8 @@
 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- development version, includes helpful console warnings -->
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>    
-    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
     <!-- production version, optimized for size and speed -->
     <!--
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -63,7 +63,7 @@
                             </div>
                         </ul>
                     </div>
-                       <div class="col-lg-2">
+                    <div class="col-lg-2">
                         <ul>
                             <div class="dropdown">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Party Loyalty
@@ -94,7 +94,7 @@
                             <input type="checkbox" @click="filteredParties" name="party" value="I">I
                         </div>
                         <div class="col-lg-1">
-                            <select  id="option"  class="FiltroDesplegable"  @change="filteredParties">
+                            <select id="option" class="FiltroDesplegable" @change="filteredParties">
                                 <option :value="state" v-for="state in searchState">{{state}}</option>
                             </select>
                         </div>
@@ -111,7 +111,7 @@
                         </thead>
                         <tbody>
                             <tr v-for="memeber in members">
-                                <td><a :href="memeber.url" target=_blank>{{memeber.first_name}} {{memeber.middle_name}} {{memeber.last_name}}</a></td> 
+                                <td><a :href="memeber.url" target=_blank>{{memeber.first_name}} {{memeber.middle_name}} {{memeber.last_name}}</a></td>
                                 <td>{{memeber.party}}</td>
                                 <td>{{memeber.state}}</td>
                                 <td>{{memeber.seniority}}</td>
@@ -119,6 +119,17 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div class="atom-spinner" v-if = "members.length === 0">
+                        <div class="spinner-inner">
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <div class="spinner-line"></div>
+                            <!--Chrome renders little circles malformed :(-->
+                            <div class="spinner-circle">
+                                &#9679;
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6"> <img class="img-rounded" id="IMG2" src="22550505_xl.jpg" alt="Bandera USA"></div>
             </div>
